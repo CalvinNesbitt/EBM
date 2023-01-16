@@ -59,7 +59,7 @@ class EBMTrajectoryObserver:
         """param, integrator: integrator being observed."""
 
         # Needed knowledge of the integrator
-        self._parameters = integrator.parameter_dict
+        self._parameters = integrator.parameters
 
         # Trajectory Observation logs
         self.time_obs = []  # Times we've made observations
@@ -118,5 +118,5 @@ def make_observations(runner, looker, obs_num, obs_freq, noprog=True):
     obs_freq, adimensional time between observations"""
     looker.look(runner)  # Look at IC
     for step in tqdm(np.repeat(obs_freq, obs_num), disable=noprog):
-        runner.integrate(obs_freq)
+        runner.run(obs_freq)
         looker.look(runner)
