@@ -2,10 +2,8 @@
 Definition of the 0-D EBM that is featured in our thesis work.
 """
 import numpy as np
-import numpy.random as rm
 import xarray as xr
 from tqdm import tqdm
-from scipy.integrate import solve_ivp
 
 # Standard Parameter Choices
 
@@ -52,66 +50,6 @@ def potential(T, TSI=TSI, a0=a0, a1=a1, T_ref=T_ref, emissitivity=emissitivity):
     R_i_term = TSI / 4 * (T - a0 * T + a1 / 2 * np.log(np.cosh(T - T_ref)))
     R_o_term = emissitivity * boltzman * T**5 / 5
     return R_i_term - R_o_term
-
-
-class EBM_Integrator:
-    """
-    Integrates 0D EBM model.
-    """
-
-    def __init__(self, T_init=None, TSI=1367):
-
-        self.TSI = TSI
-        self.time = 0
-
-        if T_init is None:
-            self._state = np.array([rm.normal(loc=273, scale=10)])
-        else:
-            self._state = np.array([T_init])
-
-    def _rhs_dt(self, t, state):
-        return ebm_rhs(state, TSI=self.TSI)
-
-    def integrate(self, how_long):
-        """time: how long we integrate for in adimensional time."""
-
-        # Where We are
-        t = self.time
-        IC = self.state
-
-        # Integration, uses RK45 with adaptive stepping. THIS IS THE HEART.
-        solver_return = solve_ivp(
-            self._rhs_dt, (t, t + how_long), IC, dense_output=True
-        )
-
-        # Updating variables
-        self.set_state(solver_return.y[:, -1])
-        self.time = t + how_long
-
-    def set_state(self, x):
-        """x is [T]."""
-        self._state = x
-        return
-
-    @property
-    def state(self):
-        """Where we are in phase space."""
-        return self._state
-
-    @property
-    def parameter_dict(self):
-        param = {
-            "TSI": self.TSI,
-            "OLR": OLR,
-            "global_mean_temp": global_mean_temp,
-            "boltzman": boltzman,
-            "emissitivity": emissitivity,
-            "capacity": capacity,
-            "a0": a0,
-            "a1": a1,
-            "T_ref": T_ref,
-        }
-        return param
 
 
 class EBMTrajectoryObserver:
@@ -178,9 +116,7 @@ def make_observations(runner, looker, obs_num, obs_freq, noprog=True):
     looker, observer object.
     obs_num, how many observations you want.
     obs_freq, adimensional time between observations"""
-    looker.look(runner) # Look at IC
+    looker.look(runner)  # Look at IC
     for step in tqdm(np.repeat(obs_freq, obs_num), disable=noprog):
         runner.integrate(obs_freq)
         looker.look(runner)
-
-        

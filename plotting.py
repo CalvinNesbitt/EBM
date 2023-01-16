@@ -2,53 +2,65 @@
 Functions for plotting flow lines for the rotated double well.
 """
 
-##########################################
-## Imports
-##########################################
+# Imports
 
 # Standard Packages
 import os
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.transforms as mtransforms
-mpl.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
-import numpy as np
 import string
 
-## Helper Functions
-##########################################
+mpl.rcParams["text.latex.preamble"] = [r"\usepackage{amsmath}"]
 
-def init_2d_fax(nrows=1, ncols=1, fraction=1.0, labels=True, size='noise_induced_transitions_lessons_paper'):
+# Helper Functions
+
+
+def init_2d_fax(
+    nrows=1,
+    ncols=1,
+    fraction=1.0,
+    labels=True,
+    size="noise_induced_transitions_lessons_paper",
+):
     "Function for initialising figure/axes."
 
     # Set size for paper
     if ncols == 2:
         fraction = 1.5
-        print(f'Using auto fraction sizing')
+        print("Using auto fraction sizing")
     size = set_size(size, fraction=fraction, subplots=(nrows, ncols))
     fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=size)
-    if (nrows * ncols > 1):
+    if nrows * ncols > 1:
         for ax in axes.flatten():
             ax.grid()
     else:
         axes.grid()
 
-    # Label subfigures by default
+    # Label subfigures by default
     if labels and (nrows * ncols > 1):
         for i, ax in enumerate(axes.flatten()):
             # label physical distance in and down:
-            label = list(string.ascii_lowercase)[i] +')'
-            trans = mtransforms.ScaledTranslation(10/72, -5/72, fig.dpi_scale_trans)
-            ax.text(0.0, 1.0, label, transform=ax.transAxes + trans, verticalalignment='top',
-                    bbox=dict(facecolor='0.7', edgecolor='None', pad=3.0))
+            label = list(string.ascii_lowercase)[i] + ")"
+            trans = mtransforms.ScaledTranslation(10 / 72, -5 / 72, fig.dpi_scale_trans)
+            ax.text(
+                0.0,
+                1.0,
+                label,
+                transform=ax.transAxes + trans,
+                verticalalignment="top",
+                bbox=dict(facecolor="0.7", edgecolor="None", pad=3.0),
+            )
 
     return fig, axes
+
 
 def ensure_directory_exists(d):
     if not os.path.exists(d):
         os.makedirs(d)
-        print(f'Made directory at:\n\n{d}')
+        print(f"Made directory at:\n\n{d}")
     return
+
 
 def set_size(width, fraction=1, subplots=(1, 1)):
     """Set figure dimensions to avoid scaling in LaTeX.
@@ -66,11 +78,11 @@ def set_size(width, fraction=1, subplots=(1, 1)):
     fig_dim: tuple
             Dimensions of figure in inches
     """
-    if width == 'noise_induced_transitions_lessons_paper':
-        width_pt = 240.
-    elif width == 'beamer':
+    if width == "noise_induced_transitions_lessons_paper":
+        width_pt = 240.0
+    elif width == "beamer":
         width_pt = 307.28987
-    elif width == 'thesis':
+    elif width == "thesis":
         width_pt = 483.69 * 0.6
     else:
         width_pt = width
@@ -82,7 +94,7 @@ def set_size(width, fraction=1, subplots=(1, 1)):
 
     # Golden ratio to set aesthetic figure height
     # https://disq.us/p/2940ij3
-    golden_ratio = (5**.5 - 1) / 2
+    golden_ratio = (5**0.5 - 1) / 2
 
     # Figure width in inches
     fig_width_in = fig_width_pt * inches_per_pt
