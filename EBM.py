@@ -11,12 +11,15 @@ TSI = 1367  # TSI in units of WM-2
 OLR = 239  # OLR from space in WM-2
 global_mean_temp = 288  # K
 boltzman = 5.67 * 10**-8
+reduced_boltzman = 180**-4  # Chosen to match Gelbrecht
 emissitivity = OLR / (
     boltzman * global_mean_temp**4
 )  # Computing emissitivity factor as a model fit
 capacity = (
     105 * 10**5
 )  # From Dijkstra 'Nonlinear Climate Dynamics' page 267, units are Jm-2K-2
+boltzman_scale = reduced_boltzman/(emissitivity * boltzman)
+time_scale = boltzman_scale * capacity  # time_scale * real time =   virtual time
 a0 = 0.5  # Lower albedo is a0 - a1/2
 a1 = 0.4  # Upper albedo is a0 + a1/2
 T_ref = 270
@@ -49,7 +52,7 @@ def ebm_rhs(T, TSI=TSI, a0=a0, a1=a1, T_ref=T_ref, emissitivity=emissitivity):
 def potential(T, TSI=TSI, a0=a0, a1=a1, T_ref=T_ref, emissitivity=emissitivity):
     R_i_term = TSI / 4 * (T - a0 * T + a1 / 2 * np.log(np.cosh(T - T_ref)))
     R_o_term = emissitivity * boltzman * T**5 / 5
-    return R_i_term - R_o_term
+    return R_o_term - R_i_term
 
 
 class EBMTrajectoryObserver:
