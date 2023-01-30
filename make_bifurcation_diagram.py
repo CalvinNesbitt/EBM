@@ -1,7 +1,7 @@
 # Imports
 from EBM import ebm_rhs, emissitivity, a0, a1, make_observations, EBMTrajectoryObserver
 from plotting import init_2d_fax
-from detDyn.dynamics.integrator import odeIntegrator
+from detDyn.integrator import OdeIntegrator
 from m_state import find_m_states
 
 from scipy.interpolate import interp1d
@@ -22,8 +22,8 @@ def find_attractors(TSI):
     EBM_parameters = {"TSI": TSI, "emissitivity": emissitivity, "a0": a0, "a1": a1}
 
     # Setup integrators
-    sb_integrator = odeIntegrator(ebm_rhs, np.array([200]), EBM_parameters)
-    w_integrator = odeIntegrator(ebm_rhs, np.array([300]), EBM_parameters)
+    sb_integrator = OdeIntegrator(ebm_rhs, np.array([200]), EBM_parameters)
+    w_integrator = OdeIntegrator(ebm_rhs, np.array([300]), EBM_parameters)
 
     # Run Integrations to find attractors
     attractor_list = []

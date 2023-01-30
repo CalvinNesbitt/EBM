@@ -1,6 +1,6 @@
 # Imports
 
-from detDyn.dynamics.integrator import odeIntegrator
+from detDyn.integrator import OdeIntegrator
 from detDyn.m_state.bisectionAlgorithm import bisectionAlgorithm
 from EBM import emissitivity, a0, a1, ebm_rhs
 import numpy as np
@@ -45,7 +45,7 @@ def find_m_state(TSI):
     EBM_parameters = {"TSI": TSI, "emissitivity": emissitivity, "a0": a0, "a1": a1}
 
     # Setup integrator
-    ebm_integrator = odeIntegrator(ebm_rhs, np.array([280]), EBM_parameters)
+    ebm_integrator = OdeIntegrator(ebm_rhs, np.array([280]), EBM_parameters)
 
     # Setup mstate algorithm
     mstate = bisectionAlgorithm(
