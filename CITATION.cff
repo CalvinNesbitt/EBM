@@ -3,7 +3,7 @@ message: "If you use this software, please cite it as below."
 authors:
   - family-names: Nesbitt
     given-names: Calvin
-title: "EBM"
+title: "Budyko-Sellers EBM python Implementation"
 version: 0.0.1
 identifiers:
   - type: doi
