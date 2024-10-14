@@ -1,7 +1,7 @@
 # Imports
 
-from detDyn.integrator import OdeIntegrator
-from detDyn.m_state.bisectionAlgorithm import bisectionAlgorithm
+from chaos_explorer.integrator import OdeIntegrator
+from chaos_explorer.m_state.bisectionAlgorithm import BisectionAlgorithm
 from EBM import emissitivity, a0, a1, ebm_rhs
 import numpy as np
 from tqdm import tqdm
@@ -48,7 +48,7 @@ def find_m_state(TSI):
     ebm_integrator = OdeIntegrator(ebm_rhs, np.array([280]), EBM_parameters)
 
     # Setup mstate algorithm
-    mstate = bisectionAlgorithm(
+    mstate = BisectionAlgorithm(
         ebm_integrator,
         check_if_ebm_ic_cold,
         cool_down,

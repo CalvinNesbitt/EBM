@@ -18,7 +18,9 @@ emissitivity = OLR / (
 capacity = (
     105 * 10**5
 )  # From Dijkstra 'Nonlinear Climate Dynamics' page 267, units are Jm-2K-2
-boltzman_scale = reduced_boltzman/(emissitivity * boltzman)
+boltzman_scale = reduced_boltzman / (
+    emissitivity * boltzman
+)  # This transforms your parameters to Lucarini's. TSI = 1360 corresponds to S=9.32
 time_scale = boltzman_scale * capacity  # time_scale * real time =   virtual time
 a0 = 0.5  # Lower albedo is a0 - a1/2
 a1 = 0.4  # Upper albedo is a0 + a1/2
@@ -46,6 +48,9 @@ def ebm_rhs(T, TSI=TSI, a0=a0, a1=a1, T_ref=T_ref, emissitivity=emissitivity):
     return R_I(T, TSI=TSI, a0=a0, a1=a1, T_ref=T_ref) - R_O(
         T, emissitivity=emissitivity
     )
+
+def ebm_jacobian(T, TSI=TSI, a0=a0, a1=a1, T_ref=T_ref, emissitivity=emissitivity):
+    return (TSI * a1)/(8 * np.cosh(T_ref - T)**2) - 4 * emissitivity * boltzman * T**3
 
 
 # Potential of System

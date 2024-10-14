@@ -1,7 +1,7 @@
 # Imports
 from EBM import ebm_rhs, emissitivity, a0, a1, make_observations, EBMTrajectoryObserver
 from plotting import init_2d_fax
-from detDyn.integrator import OdeIntegrator
+from chaos_explorer.integrator import OdeIntegrator
 from m_state import find_m_states
 
 from scipy.interpolate import interp1d
